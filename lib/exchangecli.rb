@@ -25,13 +25,13 @@ module ExchangeCLI
 
     desc "exchange BASE TARGETS", "Exchange BASE currency value to one or more TARGET currency values."
     method_options %w( --date -d) => Date.today
-    method_options %w( --unit -u) => 1
+    method_options %w( --unit -u) => :required
     long_desc <<-DESC
       Return the value (such as "1.23") of a given BASE currency (such as "EUR")
       into one or multiple target currencies.
 
+      Required --unit (-u) option, exchange will give exchange values based on the rates of specified date.
       With -d option, exchange will give exchange values based on the rates of specified date.
-      With -u option, exchange will give exchange values based on the rates of specified date.
     DESC
     def exchange(base, *targets)
       say ExchangeCLI::Currency.new(base).exchange(targets, options[:unit])

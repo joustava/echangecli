@@ -10,12 +10,7 @@ module ExchangeCLI
     end
 
     def rates(targets)
-      quotes = @api.quotes('live', {
-        source: @source,
-        currencies: targets
-      })[:quotes]
-
-      convert(quotes, targets)
+      exchange(targets, 1)
     end
 
     def exchange(targets, value)
@@ -29,7 +24,7 @@ module ExchangeCLI
 
     private
 
-    def convert(quotes, targets, value=1)
+    def convert(quotes, targets, value)
       values = {}
       targets.each { |t|
         target = t.upcase
