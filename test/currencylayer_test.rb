@@ -15,4 +15,20 @@ class ExchangeCLITest < Minitest::Test
       :quotes
     ]
   end
+
+  def test_fetching_historical_endpoint
+    api = ::ExchangeCLI::CurrencyLayer.new
+    body = api.quotes('historical', "2018-01-07")
+
+    assert body.keys == [
+      :success,
+      :terms,
+      :privacy,
+      :historical,
+      :date,
+      :timestamp,
+      :source,
+      :quotes
+    ]
+  end
 end
