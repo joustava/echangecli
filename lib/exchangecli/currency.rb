@@ -32,11 +32,22 @@ module ExchangeCLI
       convert(quotes, targets, value)
     end
 
+    def best(target)
+      now = Date.today
+      key = :"#{@source}#{target}"
+
+      days = (now-7..now-1).map do |day|
+        {date: day}.merge(history([target], day))
+      end
+
+      days.sort_by! { |day| day[key]}.last
+    end
+
     private
 
     def convert(quotes, targets, value)
       values = {}
-      targets.each { |t|
+      targets.each do |t|
         target = t.upcase
         key = :"#{@source}#{target}"
 
@@ -48,7 +59,7 @@ module ExchangeCLI
         else # cross calculation
           values[key] = 1/quotes[:"USD#{@source}"] * quotes[:"USD#{target}"] * value.to_f
         end
-      }
+      end
 
       values
     end

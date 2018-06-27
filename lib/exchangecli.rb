@@ -51,8 +51,7 @@ module ExchangeCLI
       last seven days for a given BASE and a given TARGET currency.
     DESC
     def best(base, target)
-      say base
-      say targets
+      say ExchangeCLI::Currency.new(base).best(target)
     end
 
   end
