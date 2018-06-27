@@ -22,6 +22,16 @@ module ExchangeCLI
       convert(quotes, targets, value)
     end
 
+    def history(targets, date, value=1)
+      quotes = @api.quotes('historical', {
+        source: @source,
+        currencies: targets,
+        date: date
+      })[:quotes]
+
+      convert(quotes, targets, value)
+    end
+
     private
 
     def convert(quotes, targets, value)

@@ -20,7 +20,11 @@ module ExchangeCLI
       With -d option, rates will give exchange rates of specified date.
     DESC
     def rates(base, *targets)
-      say ExchangeCLI::Currency.new(base).rates(targets)
+      if options[:date]
+        say ExchangeCLI::Currency.new(base).history(targets, options[:date])
+      else
+        say ExchangeCLI::Currency.new(base).rates(targets)
+      end
     end
 
     desc "exchange BASE TARGETS", "Exchange BASE currency value to one or more TARGET currency values."
@@ -34,7 +38,11 @@ module ExchangeCLI
       With -d option, exchange will give exchange values based on the rates of specified date.
     DESC
     def exchange(base, *targets)
-      say ExchangeCLI::Currency.new(base).exchange(targets, options[:unit])
+      if options[:date]
+        say ExchangeCLI::Currency.new(base).history(targets, options[:date], options[:unit])
+      else
+        say ExchangeCLI::Currency.new(base).exchange(targets, options[:unit])
+      end
     end
 
     desc "best BASE TARGET", "Show best rate in the last 7 days for given BASE and TARGET currency."
