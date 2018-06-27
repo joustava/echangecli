@@ -18,7 +18,7 @@ class ExchangeCLI::CurrencyLayerTest < Minitest::Test
 
   def test_fetching_historical_endpoint
     api = ::ExchangeCLI::CurrencyLayer.new
-    body = api.quotes("historical", "usd", "2018-01-07")
+    body = api.quotes("historical", {source: "usd", date: "2018-01-07"})
 
     assert body.keys == [
       :success,
@@ -35,7 +35,7 @@ class ExchangeCLI::CurrencyLayerTest < Minitest::Test
   # Will error unless you pay
   def test_fetching_live_endpoint_non_usd
     api = ::ExchangeCLI::CurrencyLayer.new
-    body = api.quotes('historical', "eur", "2018-01-07")
+    body = api.quotes('historical', {source: "eur", date: "2018-01-07"})
 
     assert body.keys == [
       :success,

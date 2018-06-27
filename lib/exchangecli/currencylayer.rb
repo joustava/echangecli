@@ -11,9 +11,9 @@ module ExchangeCLI
       @access_key = options[:access_key] || ENV['ACCESS_KEY']
     end
 
-    def quotes(endpoint, source='usd', date=false)
+    def quotes(endpoint, options = {})
       uri = URI("#{@base_url}#{endpoint}")
-      uri.query = query(source, date)
+      uri.query = query(options)
 
       res = Net::HTTP.get_response(uri)
       JSON.parse(res.body, {symbolize_names: true}) if res.is_a?(Net::HTTPSuccess)
@@ -22,15 +22,19 @@ module ExchangeCLI
 
     private
 
-    def query(source, date)
+    def query(options)
       params = {
         access_key: @access_key,
-        source: source,
+        source: options[:source],
         format: 1
       }
 
-      if(date)
-        params[:date] = date
+      if(options[:date])
+        params[:date] = options[:date]
+      end
+
+      if(options[:currencies])
+        params[:currencies] = options[:currencies]
       end
 
       URI.encode_www_form(params)

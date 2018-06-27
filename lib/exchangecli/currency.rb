@@ -12,7 +12,7 @@ module ExchangeCLI
     def rates(targets)
       @api.quotes('live', {
         source: @source,
-        targets: targets
+        currencies: targets
       })[:quotes]
     end
 

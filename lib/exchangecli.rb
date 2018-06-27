@@ -1,6 +1,8 @@
+require 'dotenv/load' # temp
 require 'thor'
 require 'date'
 require "exchangecli/version"
+require "exchangecli/currency"
 
 module ExchangeCLI
   class CLI < Thor
@@ -17,10 +19,12 @@ module ExchangeCLI
 
       With -d option, rates will give exchange rates on specified date.
     DESC
-    def rates(base, targets)
+    def rates(base, *targets)
       say base
       say targets
       say options[:date]
+
+      puts ExchangeCLI::Currency.new(base).rates(targets)
     end
 
     desc "exchange BASE TARGETS", "Exchange BASE currency value to one or more TARGET currency values."
