@@ -1,28 +1,26 @@
 # Exchangecli
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/exchangecli`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+> A small Gem which interacts with the currencylayer API and a slack incoming webhook
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'exchangecli'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install exchangecli
+This gem is not published yet. See usage in Development section.
 
 ## Usage
 
-TODO: Write usage instructions here
+For usage instructions run
+```
+$ bundle exec exe/exchangecli
+```
+Before you run the cli create an account at [currencylayer](https://currencylayer.com/) and note down your access_token.
+Also create an account or workspace in slack and create an [incoming webhook](https://api.slack.com/incoming-webhooks)
+and note down the webhook uri.
+
+Then run
+```
+$ bundle exec exe/exchangecli init
+```
+and follow then instructions.
 
 ## Development
 
