@@ -9,11 +9,15 @@ module ExchangeCLI
     def initialize(options = {})
       @base_url = options[:base_url] || ExchangeCLI::Config::CURRENCYLAYER_BASE_URL
       @access_key = options[:access_key] || ENV['ACCESS_KEY']
+      @default = {
+        source: 'USD',
+        currencies: []
+      }
     end
 
     def quotes(endpoint, options = {})
       uri = URI("#{@base_url}#{endpoint}")
-      uri.query = query(options)
+      uri.query = query(@default.merge(options))
 
       res = Net::HTTP.get_response(uri)
       JSON.parse(res.body, {symbolize_names: true}) if res.is_a?(Net::HTTPSuccess)
@@ -23,9 +27,11 @@ module ExchangeCLI
     private
 
     def query(options)
+      options[:currencies] << options[:source] unless options[:source] == @default[:source]
+
       params = {
         access_key: @access_key,
-        source: options[:source],
+        source: @default[:source],
         format: 1
       }
 
