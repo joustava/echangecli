@@ -1,5 +1,12 @@
+require 'thor'
 require "exchangecli/version"
 
-module Exchangecli
-  # Your code goes here...
+module ExchangeCLI
+  class CLI < Thor
+
+    desc "version", "Show version"
+    def version
+      say ExchangeCLI::VERSION
+    end
+  end
 end

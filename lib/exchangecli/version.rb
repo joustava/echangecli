@@ -1,3 +1,3 @@
-module Exchangecli
+module ExchangeCLI
   VERSION = "0.1.0"
 end

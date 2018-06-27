@@ -1,8 +1,8 @@
 require "test_helper"
 
-class ExchangecliTest < Minitest::Test
+class ExchangeCLITest < Minitest::Test
   def test_that_it_has_a_version_number
-    refute_nil ::Exchangecli::VERSION
+    refute_nil ::ExchangeCLI::VERSION
   end
 
   def test_it_does_something_useful
