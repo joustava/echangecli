@@ -3,6 +3,7 @@ require 'thor'
 require 'date'
 require "exchangecli/version"
 require "exchangecli/currency"
+require "exchangecli/notifiers/slack"
 
 module ExchangeCLI
   class CLI < Thor
@@ -20,11 +21,13 @@ module ExchangeCLI
       With -d option, rates will give exchange rates of specified date.
     DESC
     def rates(base, *targets)
+      header = "Rates for #{base}"
       if options[:date]
-        say ExchangeCLI::Currency.new(base).history(targets, options[:date])
+        quotes = ExchangeCLI::Currency.new(base).history(targets, options[:date])
       else
-        say ExchangeCLI::Currency.new(base).rates(targets)
+        quotes = ExchangeCLI::Currency.new(base).rates(targets)
       end
+      send(header, quotes)
     end
 
     desc "exchange BASE TARGETS", "Exchange BASE currency value to one or more TARGET currency values."
@@ -38,11 +41,13 @@ module ExchangeCLI
       With -d option, exchange will give exchange values based on the rates of specified date.
     DESC
     def exchange(base, *targets)
+      header "Values for #{base}"
       if options[:date]
-        say ExchangeCLI::Currency.new(base).history(targets, options[:date], options[:unit])
+        quotes = ExchangeCLI::Currency.new(base).history(targets, options[:date], options[:unit])
       else
-        say ExchangeCLI::Currency.new(base).exchange(targets, options[:unit])
+        quotes = ExchangeCLI::Currency.new(base).exchange(targets, options[:unit])
       end
+      send(header, quotes)
     end
 
     desc "best BASE TARGET", "Show best rate in the last 7 days for given BASE and TARGET currency."
@@ -51,8 +56,25 @@ module ExchangeCLI
       last seven days for a given BASE and a given TARGET currency.
     DESC
     def best(base, target)
-      say ExchangeCLI::Currency.new(base).best(target)
+      quotes = ExchangeCLI::Currency.new(base).best(target)
+      key = :"#{base}#{target}"
+      send("Best in last 7 days for #{base}/#{target}\n#{quotes[key]} on #{quotes[:date]}")
     end
 
+
+    no_commands {
+      def send(header, quotes)
+        message = "#{header}\n#{format(quotes)}"
+        say message, :green
+        ExchangeCLI::Notifiers::Slack.new.notify(message)
+      end
+
+
+      def format(quotes)
+        formatted = ""
+        quotes.each_pair { |k, v| formatted << "#{k}: #{v}"}
+        formatted
+      end
+    }
   end
 end

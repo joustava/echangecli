@@ -1,12 +1,14 @@
 require 'net/http'
 require 'json'
 require 'exchangecli/config'
+require 'exchangecli/httpclient'
 
 module ExchangeCLI
   class CurrencyLayer
-    # SEE: https://currencylayer.com/quickstart
+    # NOTE: See https://currencylayer.com/quickstart
 
     def initialize(options = {})
+      @http = options[:http] || ExchangeCLI::HTTPClient.new
       @base_url = options[:base_url] || ExchangeCLI::Config::CURRENCYLAYER_BASE_URL
       @access_key = options[:access_key] || ENV['ACCESS_KEY']
       @default = {
@@ -16,11 +18,9 @@ module ExchangeCLI
     end
 
     def quotes(endpoint, options = {})
-      uri = URI("#{@base_url}#{endpoint}")
-      uri.query = query(@default.merge(options))
+      uri = "#{@base_url}#{endpoint}"
 
-      res = Net::HTTP.get_response(uri)
-      JSON.parse(res.body, {symbolize_names: true}) if res.is_a?(Net::HTTPSuccess)
+      @http.get(uri, query(@default.merge(options)))
     end
 
 
@@ -43,7 +43,7 @@ module ExchangeCLI
         params[:currencies] = options[:currencies]
       end
 
-      URI.encode_www_form(params)
+      params
     end
   end
 end
