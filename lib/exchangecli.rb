@@ -24,7 +24,7 @@ module ExchangeCLI
       say targets
       say options[:date]
 
-      puts ExchangeCLI::Currency.new(base).rates(targets)
+      say ExchangeCLI::Currency.new(base).rates(targets)
     end
 
     desc "exchange BASE TARGETS", "Exchange BASE currency value to one or more TARGET currency values."

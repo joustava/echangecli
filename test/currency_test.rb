@@ -2,12 +2,16 @@ require "test_helper"
 require 'json'
 
 class ExchangeCLI::CurrencyTest < Minitest::Test
+
+  def setup
+    @api = api = ::ExchangeCLI::CurrencyLayer.new
+  end
+
   # Currency#rates
   def test_rate_from_usd
-    api = ::ExchangeCLI::CurrencyLayer.new
 
-    api.stub :quotes, mocked_rate do
-      currency = ::ExchangeCLI::Currency.new('USD', api: api)
+    @api.stub :quotes, mocked_rate do
+      currency = ::ExchangeCLI::Currency.new('USD', api: @api)
       rates = currency.rates(['EUR'])
 
       assert (rates.keys == [:USDEUR])
@@ -16,10 +20,9 @@ class ExchangeCLI::CurrencyTest < Minitest::Test
   end
 
   def test_rates_from_usd
-    api = ::ExchangeCLI::CurrencyLayer.new
 
-    api.stub :quotes, mocked_rates do
-      currency = ::ExchangeCLI::Currency.new('USD', api: api)
+    @api.stub :quotes, mocked_rates do
+      currency = ::ExchangeCLI::Currency.new('USD', api: @api)
       rates = currency.rates(['EUR', 'GBP', 'JPY'])
 
       assert (rates.keys == [:USDEUR, :USDGBP, :USDJPY])
@@ -28,6 +31,21 @@ class ExchangeCLI::CurrencyTest < Minitest::Test
       assert_in_delta rates[:USDJPY] ,113.0343965954, 0.0000000001
     end
   end
+
+  def test_inverse_rates
+
+    @api.stub :quotes, mocked_rates do
+      currency = ::ExchangeCLI::Currency.new('EUR', api: @api)
+      rates = currency.rates(['USD', 'GBP', 'JPY'])
+
+      assert (rates.keys == [:EURUSD, :EURGBP, :EURJPY])
+      assert_in_delta rates[:EURUSD], 1.2028938093, 0.0000000001
+      assert_in_delta rates[:EURGBP], 0.8866456304, 0.0000000001
+      assert_in_delta rates[:EURJPY] ,135.9683759066, 0.0000000001
+    end
+  end
+
+
 
   def mocked_rate
     JSON.parse('{
