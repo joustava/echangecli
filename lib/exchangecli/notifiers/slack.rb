@@ -7,7 +7,7 @@ module ExchangeCLI
 
       def initialize(options = {})
         @http = options[:http] || ExchangeCLI::HTTPClient.new
-        @webhook_url = options[:webhook_url] || ENV['WEBHOOK']
+        @webhook_url = options[:webhook_url] || ExchangeCLI.configuration.slack_webhook_url
         @channel = options[:channel] || "general"
         @username = options[:username] || 'Captain Hook'
         @icon_emoji = options[:icon_emoji] || ":fish:"

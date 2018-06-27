@@ -1,3 +1,6 @@
+require 'net/http'
+require 'json'
+
 module ExchangeCLI
   class HTTPClient
 
@@ -6,7 +9,6 @@ module ExchangeCLI
       uri = URI(resource)
       uri.query = URI.encode_www_form(params)
       get = Net::HTTP::Get.new(uri)
-
 
       res = request(get)
       JSON.parse(res.body, {symbolize_names: true}) if res.is_a?(Net::HTTPSuccess)

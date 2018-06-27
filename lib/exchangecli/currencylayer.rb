@@ -1,6 +1,4 @@
-require 'net/http'
-require 'json'
-require 'exchangecli/config'
+require 'exchangecli/configuration'
 require 'exchangecli/httpclient'
 
 module ExchangeCLI
@@ -9,8 +7,8 @@ module ExchangeCLI
 
     def initialize(options = {})
       @http = options[:http] || ExchangeCLI::HTTPClient.new
-      @base_url = options[:base_url] || ExchangeCLI::Config::CURRENCYLAYER_BASE_URL
-      @access_key = options[:access_key] || ENV['ACCESS_KEY']
+      @base_url = options[:base_url] || ExchangeCLI::configuration.currencylayer_base_url
+      @access_key = options[:access_key] || ExchangeCLI::configuration.currencylayer_access_key
       @default = {
         source: 'USD',
         currencies: []
