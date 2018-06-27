@@ -17,28 +17,24 @@ module ExchangeCLI
     long_desc <<-DESC
       Returns the exchange rate(s) of a given base currency into one or more target currencies.
 
-      With -d option, rates will give exchange rates on specified date.
+      With -d option, rates will give exchange rates of specified date.
     DESC
     def rates(base, *targets)
-      say base
-      say targets
-      say options[:date]
-
       say ExchangeCLI::Currency.new(base).rates(targets)
     end
 
     desc "exchange BASE TARGETS", "Exchange BASE currency value to one or more TARGET currency values."
     method_options %w( --date -d) => Date.today
+    method_options %w( --unit -u) => 1
     long_desc <<-DESC
       Return the value (such as "1.23") of a given BASE currency (such as "EUR")
       into one or multiple target currencies.
 
-      With -d option, rates will give exchange rates on specified date.
+      With -d option, exchange will give exchange values based on the rates of specified date.
+      With -u option, exchange will give exchange values based on the rates of specified date.
     DESC
-    def exchange(base, targets)
-      say base
-      say targets
-      say options[:date]
+    def exchange(base, *targets)
+      say ExchangeCLI::Currency.new(base).exchange(targets, options[:unit])
     end
 
     desc "best BASE TARGET", "Show best rate in the last 7 days for given BASE and TARGET currency."

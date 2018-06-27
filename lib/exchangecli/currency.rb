@@ -18,9 +18,18 @@ module ExchangeCLI
       convert(quotes, targets)
     end
 
+    def exchange(targets, value)
+      quotes = @api.quotes('live', {
+        source: @source,
+        currencies: targets,
+      })[:quotes]
+
+      convert(quotes, targets, value)
+    end
+
     private
 
-    def convert(quotes, targets)
+    def convert(quotes, targets, value=1)
       values = {}
       targets.each { |t|
         target = t.upcase
@@ -28,11 +37,11 @@ module ExchangeCLI
 
         next if @source == target # not interested
         if (@source == 'USD') # rates as is.
-          values[key] = quotes[key]
+          values[key] = quotes[key] * value.to_f
         elsif (target == 'USD') # inverse
-          values[key] = 1/quotes[:"#{target}#{@source}"]
+          values[key] = 1/quotes[:"#{target}#{@source}"]  * value.to_f
         else # cross calculation
-          values[key] = 1/quotes[:"USD#{@source}"] * quotes[:"USD#{target}"]
+          values[key] = 1/quotes[:"USD#{@source}"] * quotes[:"USD#{target}"] * value.to_f
         end
       }
 
