@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ExchangeCLITest < Minitest::Test
+class ExchangeCLI::CurrencyLayerTest < Minitest::Test
 
   def test_fetching_live_endpoint
     api = ::ExchangeCLI::CurrencyLayer.new
